@@ -43,6 +43,7 @@ tool call section
 ### Build Index
 
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+
 from langchain_community.document_loaders import WebBaseLoader
 from langchain_community.vectorstores import Chroma
 from langchain.embeddings.base import Embeddings
@@ -58,10 +59,14 @@ from typing import List
 # embd = OpenAIEmbeddings()
 
 # Docs to index
+# urls = [
+#     "https://lilianweng.github.io/posts/2023-06-23-agent/",
+#     "https://lilianweng.github.io/posts/2023-03-15-prompt-engineering/",
+#     "https://lilianweng.github.io/posts/2023-10-25-adv-attack-llm/",
+# ]
+
 urls = [
-    "https://lilianweng.github.io/posts/2023-06-23-agent/",
-    "https://lilianweng.github.io/posts/2023-03-15-prompt-engineering/",
-    "https://lilianweng.github.io/posts/2023-10-25-adv-attack-llm/",
+    "https://arxiv.org/html/2402.03620v1"
 ]
 
 # Load
@@ -101,6 +106,11 @@ vectorstore = Chroma.from_documents(
     embedding=embedding_model,
 )
 retriever = vectorstore.as_retriever()
+
+
+for doc in vectorstore.get()["documents"]:
+    print(doc)
+
 
 ### Router
 
@@ -144,13 +154,42 @@ print(
         {"question": "Who will the Bears draft first in the NFL draft?"}
     )
 )
-print(question_router.invoke({"question": "What are the types of agent memory?"}))
+print(question_router.invoke({"question": "What are LLMs?"}))
 
 
 
 
 
+# Data model
+class GradeDocuments(BaseModel):
+    """Binary score for relevance check on retrieved documents."""
 
+    binary_score: str = Field(
+        description="Documents are relevant to the question, 'yes' or 'no'"
+    )
+
+
+# LLM with function call
+# llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+structured_llm_grader = llm.with_structured_output(GradeDocuments)
+
+# Prompt
+system = """You are a grader assessing relevance of a retrieved document to a user question. \n 
+    If the document contains keyword(s) or semantic meaning related to the user question, grade it as relevant. \n
+    It does not need to be a stringent test. The goal is to filter out erroneous retrievals. \n
+    Give a binary score 'yes' or 'no' score to indicate whether the document is relevant to the question."""
+grade_prompt = ChatPromptTemplate.from_messages(
+    [
+        ("system", system),
+        ("human", "Retrieved document: \n\n {document} \n\n User question: {question}"),
+    ]
+)
+
+retrieval_grader = grade_prompt | structured_llm_grader
+question = "agent memory"
+docs = retriever.invoke(question)
+doc_txt = docs[1].page_content
+print(retrieval_grader.invoke({"question": question, "document": doc_txt}))
 
 
 # # retrieved_docs = vectorstore.similarity_search("what are agents?", k=3)
