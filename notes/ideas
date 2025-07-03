@@ -1,0 +1,43 @@
+so https://www.youtube.com/watch?v=4GiqzUHD5AA
+i can store memories in a vector db, chuck? unsure depends on length i guess
+query memories based on similarity
+
+so when asking a question model will question what kind of info of the user do i need to answer this question 
+if dont exist answer in a general way
+
+so like what is the average pay of a software engineer
+
+if they got my age and experiance they can answer based on that etc etc
+else answer in a general way
+ask for user information 
+user gives information 
+updates memeory 
+gives answer based on new memory 
+retain this memory for future use cases
+
+so what is the weather today, 
+user has mentioned malaysia so i will give the wheather in malaysia now based on pass memory
+
+
+we need this because of context windows (think of this as ram for the model)
+so we want to pull in just the right amount of context to not waste ram and also since we have a limit 
+we would need to maximize the allocation of the window size
+
+tools are also pulled into context
+(so fetching tools are also more efficienct using rag over tools description for a given task, and imporves peformance and only pulling significant tools into context)
+
+![alt text](image.png)
+
+
+### compressing context 
+compressing context involves only retaining the tokens required to perform a task
+
+
+
+something like updateking a state or a agent?
+so pass the memory into the agents and the agents will pass back information based on the information that the agent is holding?
+
+so when evaluating context engineering effort we need to make sure we dont degrade the models performance
+
+
+logic to post processe token heavy tool calls inside tool node
