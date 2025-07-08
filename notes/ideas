@@ -41,3 +41,68 @@ so when evaluating context engineering effort we need to make sure we dont degra
 
 
 logic to post processe token heavy tool calls inside tool node
+
+
+
+RunnableChain as a Tool
+so for the documents input into the db will need a runnable chain as a tool
+same a the taxonomy one
+
+
+
+resume tool idea
+
+so no need web search 
+just focus on the upload resumes in the db
+
+so text splitter the resume 
+or someform of processing
+
+embed, store in db
+
+HIL
+so ask the bot questions
+
+system prompt 
+"you are a resume analyser, you have access to a database of resumes, show 3 of the most suitable candidates, unless requested otherwise"
+
+question
+"i am currently lloking for an experianced manager that has at least 5 years or experiance in thier field, give me 3 potential candidates for this job role"
+
+query the resume db for potential candidates
+return in a 
+
+schema {
+    name
+    age
+    job 1 
+    job 2
+    job 3
+}
+
+reason why this is a good candidate
+
+
+HIL here are the 3 candidates that are the best for this role, which candidate would you like more information about 
+ 
+1 and 2
+gives more information about these candidates
+
+would you like to email or schedule them for an interview?
+send an email to candidate 1, with a short assement to test his basic knowledge of python and C++
+
+pass over to the quiz agent
+"you are a assesment author, you create assesments for interviewees depeing on what is requested. create 3 problems easy medium hard "
+
+pass back to the email agent
+
+EXTRA
+check the schedule of the user in google calender and suggest time slots
+
+email agent
+"you are the assiatant for the HEad or HR, you write and send emails in a profesional tone"
+
+email
+subject
+cc
+
